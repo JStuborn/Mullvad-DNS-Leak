@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Fetch Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    h1 {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="start()">Start</button>
+  <div>
+    <h1 id="fetch">Fetch: 0</h1>
+    <h1 id="success">Success: 0</h1>
+    <h1 id="failed">Failed: 0</h1>
+  </div>
+
+  <script>
+    let iteration = 0;
+    let fetchIterations = 0;
+    let successIterations = 0;
+    let failedIterations = 0;
+    let session = makeId();
+
+    function makeId() {
+      let text = "";
+      const possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+      for (let i = 0; i < 10; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return text;
+    }
+
+    function createUrl() {
+      iteration++;
+      const date = new Date().toISOString().replace(/:|\./g, '-').slice(11, -5);
+      return `https://${session}-${iteration}-${date}.mullvad.test/`;
+    }
+
+    function updateText() {
+      document.getElementById("fetch").textContent = `Fetch: ${fetchIterations}`;
+      document.getElementById("success").textContent = `Success: ${successIterations}`;
+      document.getElementById("failed").textContent = `Failed: ${failedIterations}`;
+    }
+
+    function makeFetch() {
+      const url = createUrl();
+      fetch(url, {
+        mode: 'no-cors'
+      })
+      .then(() => {
+        successIterations++;
+        updateText();
+      })
+      .catch(() => {
+        failedIterations++;
+        updateText();
+      });
+      fetchIterations++;
+      updateText();
+    }
+
+    function start() {
+      updateText();
+      setInterval(makeFetch, 30);
+    }
+  </script>
+</body>
+</html>
