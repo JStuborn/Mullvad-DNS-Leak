@@ -1,6 +1,8 @@
 # MullvadDNS Leak
 
 Example Proof of Concept (POC) of the Mullvad Android DNS leak.
+The challenge stems from an inherent flaw within the Android operating system, making it impossible to resolve without a patch from Android's developers. 
+One workaround is to manipulate DNS settings temporarily while transitioning between configurations.
 
 ---
 
